@@ -1,3 +1,4 @@
-progress
-keyboard
 rich
+windows-curses
+keyboard
+progress
