@@ -10,12 +10,9 @@ from progress.bar import ChargingBar
 
 
 console = Console()
+stringList: str = []
 
-amountOfWords = int(input('How much words do you want to type?\n'))
-stringToType = ''
-for i in range(amountOfWords):
-    stringToType += f'{choice(commonEnglishWordsArray)} '
-stringToType = stringToType[:-1]
+amountOfWords = 0
 
 typedString: str = ''
 mistakes: int = 0
@@ -56,6 +53,31 @@ def showStats(timeInterval, totalWords, totalMistakenWords):
 
 def main():
     global stringToType
+    console.print(f"""
+Choose a mode:
+[red bold]0: Classic (30 random words)[/red bold]
+[green bold]1: Custom amount of words[/green bold]
+[blue bold]2: Custom text[/blue bold]
+""")
+    stringToType = ''
+    while True:
+        match input('Your choice [0, 1, 2]: '):
+            case '0':
+                for i in range(30):
+                    stringToType += f'{choice(commonEnglishWordsArray)} '
+                stringToType = stringToType[:-1]
+                break
+            case '1':
+                for i in range(int(input('How much words do you what to type?\n'))):
+                    stringToType += f'{choice(commonEnglishWordsArray)} '
+                stringToType = stringToType[:-1]
+                break
+            case '2':
+                stringToType = input('Enter your custom text:\n')
+                break
+            case _:
+                console.print('[red bold]Choose a valid number![/red bold]')
+    print(stringToType)
     keyboard.on_press(onKeyPress)
     startingTime = time.time()
     wordsTyped = len(stringToType.split())
@@ -71,8 +93,8 @@ def main():
                 dynamicString = f"[red]{typedString}[/red][bright_black]{stringToType.replace(stringToType[0:len(typedString)], '')}[/bright_black]"
             
             os.system('cls' if os.name == 'nt' else 'clear')
-            console.print(f'{dynamicString}\nMistakes : {mistakes}')
-            time.sleep(0.1) 
+            console.print(f'{dynamicString}\nMistakes : {mistakes}') 
+            time.sleep(0.05)
     keyboard.unhook_all()
 
 if __name__ == '__main__':
