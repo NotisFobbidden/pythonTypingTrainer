@@ -2,7 +2,6 @@ from random import choice
 import keyboard
 import time
 import os
-from rich import print as rprint
 from rich.console import Console
 from commonEnglishWords import commonEnglishWordsArray
 from progress.bar import ChargingBar
@@ -77,7 +76,6 @@ Choose a mode:
                 break
             case _:
                 console.print('[red bold]Choose a valid number![/red bold]')
-    print(stringToType)
     keyboard.on_press(onKeyPress)
     startingTime = time.time()
     wordsTyped = len(stringToType.split())
