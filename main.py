@@ -5,12 +5,15 @@ import os
 from rich import print as rprint
 from rich.console import Console
 from commonEnglishWords import commonEnglishWordsArray
+from progress.bar import ChargingBar
+
+
 
 console = Console()
 
-
+amountOfWords = int(input('How much words do you want to type?\n'))
 stringToType = ''
-for i in range(10):
+for i in range(amountOfWords):
     stringToType += f'{choice(commonEnglishWordsArray)} '
 stringToType = stringToType[:-1]
 
@@ -33,18 +36,23 @@ def onKeyPress(event):
                 mistakes += 1
         typedString += event.name
 
-def computeWpm(timeInterval, totalWords, totalMistakes):
-    wpm = (totalWords / 5) / (timeInterval / 60)
+def showStats(timeInterval, totalWords, totalMistakenWords):
+    wpm = totalWords / (timeInterval / 60)
     
     if totalWords > 0:
-        accuracy = ((totalWords - totalMistakes) / totalWords) * 100
+        accuracy = ((totalWords - totalMistakenWords) / totalWords) * 100
         accuracy = max(accuracy, 0)  # Ensure accuracy is not negative
     else:
         accuracy = 100
     
-    return f"""
-    [cyan1 bold]WPM[/cyan1 bold]: [cyan2 bold]{wpm:.1f}[/cyan2 bold] | [cyan1 bold]Accuracy[/cyan1 bold]: [cyan2 bold]{accuracy:.1f}%[/cyan2 bold]
-"""
+    console.print(f"""
+    [cyan1 bold]WPM[/cyan1 bold]: [cyan2 bold]{wpm:.1f}
+""")
+    with ChargingBar('Accuracy | ', empty_fill='·', color='cyan') as bar:
+        for i in range(round(accuracy)):
+            time.sleep(0.05)
+            bar.next()
+
 
 def main():
     global stringToType
@@ -54,7 +62,7 @@ def main():
     
     while 'Esc' not in typedString:
         if len(typedString) == len(stringToType):
-            rprint(computeWpm(time.time() - startingTime, wordsTyped, mistakes))
+            showStats(time.time() - startingTime, wordsTyped, mistakes)
             break
         else:
             if typedString == stringToType[0:len(typedString)]:
